@@ -1,7 +1,11 @@
 # RouteX
 
-<span class="badge-npmversion"><a href="https://npmjs.org/package/@tralse/routex" title="View this project on NPM"><img src="https://img.shields.io/npm/v/%40tralse%2Froutex" alt="NPM version" /></a></span>
-<span class="badge-npmdownloads"><a href="https://npmjs.org/package/%40tralse%2Froutex" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/%40tralse%2Froutex.svg" alt="NPM downloads" /></a></span>
+<span class="badge-npmversion"><a href="https://npmjs.org/package/@tralse-jr/routex" title="View this project on NPM"><img src="https://img.shields.io/npm/v/%40tralse-jr%2Froutex" alt="NPM version" /></a></span>
+<span class="badge-npmdownloads"><a href="https://npmjs.org/package/%40tralse-jr%2Froutex" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/%40tralse-jr%2Froutex.svg" alt="NPM downloads" /></a></span>
+
+**NOTE: This package is similar to @tralse/routex. All packages from @tralse will be continued to @tralse-jr.**
+
+**ANNOUNCEMENT**: Routex Plugins is now available! Its exclusive documentation will arrive soon!
 
 RouteX is a lightweight package designed to simplify the management and loading of routes in an Express.js application based on configuration files. It automates the process of routing setup, allowing developers to define routes in configuration files and seamlessly integrate them into their Express.js projects.
 
