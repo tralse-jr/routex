@@ -9,12 +9,11 @@
     "test": "jest",
     "prestart": "npm test",
     "build": "tsup",
-    "pub": "tsup && npm publish --access=public && exit",
+    "pub": "tsup && npm publish --access=public",
     "release": "standard-version && git push --follow-tags origin main",
     "release:minor": "standard-version --release-as minor && git push --follow-tags origin main",
     "release:major": "standard-version --release-as major && git push --follow-tags origin main"
   },
-  "files": [],
   "jest": {
     "testEnvironment": "node"
   },
