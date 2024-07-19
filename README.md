@@ -1,9 +1,9 @@
 # RouteX
 
-<span class="badge-npmversion"><a href="https://npmjs.org/package/@tralse-jr/routex" title="View this project on NPM"><img src="https://img.shields.io/npm/v/%40tralse-jr%2Froutex" alt="NPM version" /></a></span>
-<span class="badge-npmdownloads"><a href="https://npmjs.org/package/%40tralse-jr%2Froutex" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/%40tralse-jr%2Froutex.svg" alt="NPM downloads" /></a></span>
+<span class="badge-npmversion"><a href="https://npmjs.org/package/@tralsejr/routex" title="View this project on NPM"><img src="https://img.shields.io/npm/v/%40tralsejr%2Froutex" alt="NPM version" /></a></span>
+<span class="badge-npmdownloads"><a href="https://npmjs.org/package/%40tralsejr%2Froutex" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/%40tralsejr%2Froutex.svg" alt="NPM downloads" /></a></span>
 
-**NOTE: This package is similar to @tralse/routex. All packages from @tralse will be continued to @tralse-jr.**
+**NOTE: This package is similar to @tralse/routex. All packages from @tralse will be continued to @tralsejr.**
 
 **ANNOUNCEMENT**: Routex Plugins is now available! Its exclusive documentation will arrive soon!
 

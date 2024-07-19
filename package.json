@@ -1,5 +1,5 @@
 {
-  "name": "@tralse-jr/routex",
+  "name": "@tralsejr/routex",
   "version": "0.0.0",
   "description": "Express router automator for dinosaurs.",
   "main": "./dist/index.js",
@@ -20,14 +20,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tralse-jr/routex.git"
+    "url": "git+https://github.com/tralsejr/routex.git"
   },
   "author": "Gio Kent",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tralse-jr/routex/issues"
+    "url": "https://github.com/tralsejr/routex/issues"
   },
-  "homepage": "https://github.com/tralse-jr/routex#readme",
+  "homepage": "https://github.com/tralsejr/routex#readme",
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "jest": "^29.7.0",
@@ -37,7 +37,6 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@tralse-jr/dino-docs": "^1.0.0",
     "@tralse/developer-logs": "^1.2.0"
   }
 }
