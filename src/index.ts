@@ -4,62 +4,36 @@ import { pathToFileURL } from "url";
 import { loadConfig, defineConfig } from "./config";
 import { log } from "@tralse/developer-logs";
 import { walkDirectory } from "./walk";
+import { loadPlugins } from "./plugin";
+import { Plugin, SortedPlugins } from "./types";
 
-interface Options {
+interface RouteXOptions {
   debug?: boolean;
   makeReport?: boolean;
 }
-
-const loadPlugins = async (
-  pluginsConfig?: { name: string; options?: {} }[]
-) => {
-  const plugins: { [key: string]: any } = {};
-  if (pluginsConfig) {
-    for (const plugin of pluginsConfig) {
-      try {
-        if (plugin.name === "DinoDocs") {
-          plugins.DinoDocs = (await import("@tralse-jr/dino-docs")).DinoDocs;
-        }
-        // Add more plugins here as needed
-      } catch (error) {
-        log.red(`PLUGIN_ERR: Error loading plugin ${plugin.name}.`, "routex");
-        throw error; // Optionally throw to stop further processing if critical
-      }
-    }
-  }
-  return plugins;
-};
 
 const loadRoute = async (
   ext: string,
   filePath: string,
   newRoutePath: string,
-  plugins: { [key: string]: any },
+  plugins: SortedPlugins | undefined,
   app: Express,
   debug?: boolean
-) => {
+): Promise<{ success: boolean }> => {
   try {
     if (ext === ".js" || ext === ".ts") {
-      const route = require(filePath);
-      if (plugins.DinoDocs) {
-        await plugins.DinoDocs(app, {
-          filePath,
-          routePath: newRoutePath,
-          route,
-        });
-      }
-      app.use(newRoutePath, route);
+      const router = require(filePath);
+      plugins?.middleware.forEach(({ subscriber }) => {
+        subscriber(filePath, newRoutePath, router);
+      });
+      app.use(newRoutePath, router);
     } else if (ext === ".mjs") {
       const routeUrl = pathToFileURL(filePath).href;
-      const { default: route } = await import(routeUrl);
-      if (plugins.DinoDocs) {
-        await plugins.DinoDocs(app, {
-          filePath,
-          routePath: newRoutePath,
-          route,
-        });
-      }
-      app.use(newRoutePath, route);
+      const { default: router } = await import(routeUrl);
+      plugins?.middleware.forEach(({ subscriber }) => {
+        subscriber(filePath, newRoutePath, router);
+      });
+      app.use(newRoutePath, router);
     }
     log.green(`Loaded route: ${newRoutePath}`, "routex");
     return { success: true };
@@ -77,11 +51,14 @@ const loadRoute = async (
   }
 };
 
-const RouteX = async (app: Express, options: Options = {}): Promise<void> => {
+const RouteX = async (
+  app: Express,
+  options: RouteXOptions = {}
+): Promise<void> => {
   const rootDir = process.cwd();
   const { debug = false, makeReport = false } = options;
   const config = await loadConfig();
-  const plugins = await loadPlugins(config.plugins);
+  const plugins = config.plugins && loadPlugins(config.plugins as Plugin[]);
 
   const routesPath = path.resolve(rootDir, config.routesPath);
 
@@ -95,7 +72,7 @@ const RouteX = async (app: Express, options: Options = {}): Promise<void> => {
     file: string,
     filePath: string,
     baseRoute: string
-  ) => {
+  ): Promise<number> => {
     const ext = path.extname(file);
     const routePath = path
       .join(baseRoute, path.basename(file, ext))
@@ -152,3 +129,4 @@ const RouteX = async (app: Express, options: Options = {}): Promise<void> => {
 };
 
 export { RouteX, defineConfig };
+export type { Plugin };

@@ -1,45 +1,26 @@
-import fs from "fs";
 import { pathToFileURL } from "url";
 import { walkDirectory } from "./walk";
-
-interface Config {
-  routesPath: string;
-  plugins?: Array<{
-    name: string;
-    options?: {};
-  }>;
-}
+import { Config } from "./types";
 
 const defaultConfig: Config = {
   routesPath: "./routes",
 };
 
-const configFiles = [
-  "routex.json",
-  "routex.config.js",
-  "routex.config.mjs",
-  "routex.config.cjs",
-];
+enum ConfigFiles {
+  JS = "routex.config.js",
+  MJS = "routex.config.mjs",
+  CJS = "routex.config.cjs",
+}
 
-const defineConfig = (config: Config): Config => {
-  return config;
-};
+const defineConfig = (config: Config): Config => config;
 
 const loadConfig = async (rootDir: string): Promise<Config> => {
   let loadedConfig: Config | null = null;
 
-  const callback = async (
-    file: string,
-    filePath: string,
-    baseRoute: string
-  ) => {
-    if (configFiles.includes(file)) {
+  const callback = async (file: string, filePath: string): Promise<number> => {
+    if (Object.values(ConfigFiles).includes(file as ConfigFiles)) {
       try {
-        if (file.endsWith(".json")) {
-          loadedConfig = JSON.parse(
-            fs.readFileSync(filePath, "utf8")
-          ) as Config;
-        } else if (file.endsWith(".js") || file.endsWith(".cjs")) {
+        if (file.endsWith(".js") || file.endsWith(".cjs")) {
           loadedConfig = require(filePath) as Config;
         } else if (file.endsWith(".mjs")) {
           const { default: config } = await import(
@@ -51,9 +32,7 @@ const loadConfig = async (rootDir: string): Promise<Config> => {
         console.error(`Error loading configuration from ${filePath}:`, error);
       }
 
-      if (loadedConfig) {
-        return -1; // Stop walking if config is found
-      }
+      if (loadedConfig) return -1; // Stop walking if config is found
     }
 
     return 1; // Continue walking
@@ -64,10 +43,9 @@ const loadConfig = async (rootDir: string): Promise<Config> => {
   return loadedConfig || defaultConfig;
 };
 
-const crawl = async (): Promise<Config> => {
-  const root = process.cwd();
-  const config = await loadConfig(root);
-  return config;
+const crawlConfig = async (): Promise<Config> => {
+  const rootDir = process.cwd();
+  return await loadConfig(rootDir);
 };
 
-export { crawl as loadConfig, defineConfig };
+export { crawlConfig as loadConfig, defineConfig };
