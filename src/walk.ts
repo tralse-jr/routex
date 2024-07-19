@@ -1,6 +1,6 @@
-import { log } from "@tralse/developer-logs";
 import fs from "fs";
 import path from "path";
+import { err } from "./utils/console";
 
 interface WalkOptions {
   debug?: boolean;
@@ -56,7 +56,7 @@ export const walkDirectory = async (
       }
     }
   } catch (error: any) {
-    log.red(
+    err(
       `DIR_ERR: Error reading directory: ${dirPath}. ${
         debug
           ? "Error details: " + error.message

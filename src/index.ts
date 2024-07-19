@@ -2,10 +2,10 @@ import { Express } from "express";
 import path from "path";
 import { pathToFileURL } from "url";
 import { loadConfig, defineConfig } from "./config";
-import { log } from "@tralse/developer-logs";
 import { walkDirectory } from "./walk";
 import { loadPlugins } from "./plugin";
 import { Plugin, SortedPlugins } from "./types";
+import { err, info, log } from "./utils/console";
 
 interface RouteXOptions {
   debug?: boolean;
@@ -35,16 +35,15 @@ const loadRoute = async (
       });
       app.use(newRoutePath, router);
     }
-    log.green(`Loaded route: ${newRoutePath}`, "routex");
+    log(`Loaded route: ${newRoutePath}`);
     return { success: true };
   } catch (error: any) {
-    log.red(
+    err(
       `ROUTE_ERR: Error loading route: ${newRoutePath}. ${
         debug
           ? `Error: ${error.message}`
           : "To view full error, add a parameter {debug: true} to the RouteX method."
-      }`,
-      "routex"
+      }`
     );
     if (debug) console.error(error);
     return { success: false };
@@ -124,7 +123,7 @@ const RouteX = async (
     --------------------------------
     Success rate: ${successRate}%
     `;
-    log.brightBlue(report, "routex");
+    info(report);
   }
 };
 
