@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Express } from "express";
 
 interface PluginMeta {
   name: string;
@@ -8,7 +8,7 @@ interface PluginMeta {
 
 export type PluginType = "middleware";
 
-export type MiddlewareSubscriber = (filePath: string, rootPath: string, router: Router) => Promise<void>;
+export type MiddlewareSubscriber = (app: Express, filePath: string, rootPath: string, router: Router) => Promise<void>;
 
 interface Insertables extends MiddlewareSubscriber {}
 
