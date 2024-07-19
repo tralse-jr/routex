@@ -78,7 +78,7 @@ const RouteX = async (
       .join(baseRoute, path.basename(file, ext))
       .replace(/\[([^[\]]+)\]/g, ":$1")
       .replace(/\\/g, "/")
-      .replace(/\/index$/, "");
+      .replace(/\/index$|^index$/, "");
     const newRoutePath = `/${routePath}`;
     const isIgnored = /\/_.*$/.test(newRoutePath);
 
