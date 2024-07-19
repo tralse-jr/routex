@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/tralsejr/routex/compare/v0.0.4...v0.0.5) (2024-07-19)
+
+
+### Bug Fixes
+
+* Fix bug where the logging statements are not seen. ([a0557e8](https://github.com/tralsejr/routex/commit/a0557e89e31d5295ad4c80985e6ce6ee13192b5e))
+
 ### [0.0.4](https://github.com/tralsejr/routex/compare/v0.0.3...v0.0.4) (2024-07-19)
 
 
