@@ -1,4 +1,4 @@
-import { Express } from "express";
+import { Express, Router } from "express";
 import path from "path";
 import { pathToFileURL } from "url";
 import { loadConfig, defineConfig } from "./config";
@@ -21,18 +21,23 @@ const loadRoute = async (
   debug?: boolean
 ): Promise<{ success: boolean }> => {
   try {
+    const subscribe = async (router: Router) => {
+      const middlewares = plugins?.middleware;
+
+      if (middlewares)
+        for (const { subscriber } of middlewares) {
+          await subscriber(app, filePath, newRoutePath, router);
+        }
+    };
+
     if (ext === ".js" || ext === ".ts") {
       const router = require(filePath);
-      plugins?.middleware.forEach(async ({ subscriber }) => {
-        await subscriber(app, filePath, newRoutePath, router);
-      });
+      await subscribe(router);
       app.use(newRoutePath, router);
     } else if (ext === ".mjs") {
       const routeUrl = pathToFileURL(filePath).href;
       const { default: router } = await import(routeUrl);
-      plugins?.middleware.forEach(async ({ subscriber }) => {
-        await subscriber(app, filePath, newRoutePath, router);
-      });
+      await subscribe(router);
       app.use(newRoutePath, router);
     }
     log(`Loaded route: ${newRoutePath}`);
