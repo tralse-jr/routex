@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/tralsejr/routex/compare/v0.0.6...v0.0.7) (2024-07-20)
+
+
+### Bug Fixes
+
+* Fix issue where subscriber is not handled asynchronously ([1249f82](https://github.com/tralsejr/routex/commit/1249f821a15925e851da36541aac4e8bd5f8a806))
+
 ### [0.0.6](https://github.com/tralsejr/routex/compare/v0.0.5...v0.0.6) (2024-07-20)
 
 ### [0.0.5](https://github.com/tralsejr/routex/compare/v0.0.4...v0.0.5) (2024-07-19)
