@@ -3,36 +3,33 @@
 <span class="badge-npmversion"><a href="https://npmjs.org/package/@tralsejr/routex" title="View this project on NPM"><img src="https://img.shields.io/npm/v/%40tralsejr%2Froutex" alt="NPM version" /></a></span>
 <span class="badge-npmdownloads"><a href="https://npmjs.org/package/%40tralsejr%2Froutex" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/%40tralsejr%2Froutex.svg" alt="NPM downloads" /></a></span>
 
-**NOTE: This package is similar to @tralse/routex. All packages from @tralse will be continued to @tralsejr.**
+**NOTE: This package is similar to @tralse/routex. Progress from @tralse/routex will be continued to @tralsejr/routex.**
 
-**ANNOUNCEMENT**: Routex Plugins is now available! Its exclusive documentation will arrive soon!
-
-RouteX is a lightweight package designed to simplify the management and loading of routes in an Express.js application based on configuration files. It automates the process of routing setup, allowing developers to define routes in configuration files and seamlessly integrate them into their Express.js projects.
+RouteX is a lightweight package designed to simplify the management and loading of routes in an Express.js application based on configuration files. It automates the process of routing setup, allowing developers to define routes in configuration files and seamlessly integrate them into your Express.js projects.
 
 ## `RouteX` Function
 
-The `RouteX` function in RouteX facilitates automatic loading of routes into an Express.js application based on a specified configuration file (`routex.json`, `routex.config.js`, `routex.config.mjs`, `routex.config.cjs`). It recursively scans the specified directory for route files and dynamically mounts them in the Express app.
+The `RouteX` function in RouteX facilitates automatic loading of routes into an Express.js application based on a configuration file. It recursively scans the specified directory for route files and dynamically mounts them in the Express app, with endpoints corresponding to the file structure.
 
 ### Installation
 
 Install RouteX via npm:
 
 ```bash
-npm install @tralse/routex
+npm install @tralsejr/routex
 ```
 
 ### Usage
 
 ```javascript
 const express = require("express");
-const { RouteX } = require("@tralse/routex");
-const { fileURLToPath } = require("url");
+const { RouteX } = require("@tralsejr/routex");
 
 const app = express();
 
 (async () => {
   // Load routes using RouteX
-  await RouteX(app, __dirname);
+  await RouteX(app);
 
   // Start server
   const PORT = process.env.PORT || 3000;
@@ -44,27 +41,31 @@ const app = express();
 
 ### Configuration
 
-Place one of the following configuration files in your project's root directory:
+To configure Routex, you need to import `defineConfig`. Then place one of the following configuration files in your project's root directory:
 
-- routex.json
-- routex.config.js
-- routex.config.mjs
-- routex.config.cjs
+- **routex.config.js** - For CommonJS projects.
+- **routex.config.cjs** - For CommonJS projects also.
+- **routex.config.mjs** - For ESM projects.
 
-Example `routex.json`:
+**Example:**
 
-```json
-{
-  "routesPath": "./routes"
-}
+```js
+//routex.config.js
+
+const { defineConfig } = require("@tralsejr/routex");
+
+module.exports = defineConfig({
+  routesPath: "./src/routes",
+});
 ```
+
+[Learn more about Routex Configuration](./docs/CONFIG.md)
 
 ### Function Details
 
 #### Parameters
 
 - `app: Express`: The Express application instance where routes will be mounted.
-- `dirname: string`: The filepath of the caller.
 - `options: Options` (optional): Configuration options for debugging and reporting.
 
 #### Options
@@ -72,21 +73,9 @@ Example `routex.json`:
 - `debug: boolean` (optional): Enable detailed error logging.
 - `makeReport: boolean` (optional): Generate a detailed report after loading routes.
 
-#### Description
+### CommonJS Example
 
-1. **Automatic Configuration Loading**: The function automatically loads the configuration (`routex.json`, `routex.config.js`, etc.) relative to the caller's directory (`__dirname`).
-
-2. **Dynamic Route Loading**: Routes are dynamically loaded from the specified routesPath directory in the configuration file. It supports CommonJS (`*.js, *.cjs`) and ECMAScript Module (`*.mjs`) formats.
-
-3. **Recursive Directory Walk**: The function recursively scans the routesPath directory, mounting routes based on file extensions (`js, ts, mjs`).
-
-4. **Detailed Reporting**: The function can generate a comprehensive report on the routing setup process, providing insights into the number of files read, successfully processed, ignored, and errors encountered.
-
-5. **Debug Mode**: When the debug option is enabled, the function provides detailed error logging. This is helpful in troubleshooting issues by displaying specific error messages and stack traces in the console.
-
-#### Example
-
-Assuming the following directory structure:
+Sample structure:
 
 ```text
 project/
@@ -104,7 +93,7 @@ project/
 │       ├── customers.js
 │       └── merchants.js
 │
-├── routex.json
+├── routex.config.js
 └── index.js
 ```
 
@@ -170,26 +159,17 @@ router.get("/", (req, res) => {
 module.exports = router;
 ```
 
-**routex.json:**
-
-```json
-{
-  "routesPath": "./routes"
-}
-```
-
-In `index.js`, load and start the Express app with RouteX:
+**index.js:**
 
 ```javascript
 const express = require("express");
-const { RouteX } = require("@tralse/routex");
-const { fileURLToPath } = require("url");
+const { RouteX } = require("@tralsejr/routex");
 
 const app = express();
 
 (async () => {
   // Load routes using RouteX
-  await RouteX(app, __dirname);
+  await RouteX(app);
 
   // Start server
   const PORT = process.env.PORT || 3000;
@@ -197,6 +177,136 @@ const app = express();
     console.log(`Server running on port ${PORT}`);
   });
 })();
+```
+
+### ESM Example
+
+Sample structure:
+
+```text
+project/
+│
+├── routes/
+│   │
+│   ├── users/
+│   │   ├── index.mjs
+│   │   └── [id]/
+│   │       └── index.mjs
+│   │
+│   ├── products.mjs
+│   │
+│   └── invoice/
+│       ├── customers.mjs
+│       └── merchants.mjs
+│
+├── routex.config.mjs
+└── index.mjs
+```
+
+**/routes/users/index.mjs:**
+
+```javascript
+import { Router } from "express";
+
+const router = Router();
+
+router.get("/", (req, res) => {
+  res.send("Users list");
+});
+
+export default router;
+```
+
+**/routes/users/\[id\]/index.mjs:**
+
+```javascript
+import { Router } from "express";
+
+const router = Router();
+
+router.get("/", (req, res) => {
+  const { id } = req.params;
+  if (id) res.send("Users with id " + id);
+  else res.status(400).send({ error: "Invalid id!" });
+});
+
+export default router;
+```
+
+**/routes/products.mjs:**
+
+```javascript
+import { Router } from "express";
+
+const router = Router();
+
+router.get("/", (req, res) => {
+  res.send("Products list");
+});
+
+export default router;
+```
+
+**/routes/invoice/customers.mjs:**
+
+```javascript
+import { Router } from "express";
+
+const router = Router();
+
+router.get("/", (req, res) => {
+  res.send("Customers list");
+});
+
+export default router;
+```
+
+**/routes/invoice/merchants.mjs:**
+
+```javascript
+import { Router } from "express";
+
+const router = Router();
+
+router.get("/", (req, res) => {
+  res.send("Merchants list");
+});
+
+export default router;
+```
+
+**index.mjs:**
+
+```javascript
+import express from "express";
+import { RouteX } from "tralsejr/routex";
+
+const app = express();
+
+(async () => {
+  // Load routes using RouteX
+  await RouteX(app);
+
+  // Start server
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+})();
+```
+
+### Running
+
+Run your Express project via CLI:
+
+```bash
+node index.js
+```
+
+or
+
+```bash
+node index.mjs
 ```
 
 After running the server, you can now access the endpoints with format:
@@ -241,17 +351,16 @@ To utilize this feature effectively, ensure that any files you want to ignore ar
 
 RouteX supports a debug mode to provide more detailed error information during route loading. To enable debug mode, pass `{ debug: true }` as an option when calling the RouteX function.
 
-##### Example
+**Example:**
 
 ```javascript
 const express = require("express");
-const { RouteX } = require("@tralse/routex");
-const { fileURLToPath } = require("url");
+const { RouteX } = require("@tralsejr/routex");
 
 const app = express();
 
 (async () => {
-  await RouteX(app, __dirname, { debug: true });
+  await RouteX(app, { debug: true });
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
@@ -262,19 +371,18 @@ const app = express();
 
 #### Make Report
 
-Enabling `makeReport` param in options provides a comprehensive summary of the routing setup process, including the total number of files processed, successfully read, ignored, errors encountered, routes loaded, and the overall success rate.
+Enabling `makeReport` param in options provides a summary of the routing setup process, including the total number of files processed, successfully read, ignored, errors encountered, routes loaded, and the overall success rate.
 
-##### Example
+**Example:**
 
 ```javascript
 const express = require("express");
-const { RouteX } = require("@tralse/routex");
-const { fileURLToPath } = require("url");
+const { RouteX } = require("@tralsejr/routex");
 
 const app = express();
 
 (async () => {
-  await RouteX(app, __dirname, { makeReport: true });
+  await RouteX(app, { makeReport: true });
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
@@ -283,7 +391,7 @@ const app = express();
 })();
 ```
 
-When makeReport is enabled in the options, RouteX generates a detailed report at the end of the routing process:
+When `makeReport` is enabled in the options, RouteX generates a detailed report at the end of the routing process:
 
 ```text
 -------- RouteX Report --------
@@ -296,6 +404,10 @@ Routes loaded: 8
 --------------------------------
 Success rate: 90.00%
 ```
+
+## Routex Plugins
+
+Check out Routex plugins by [checking this documentation](./docs/PLUGINS.md).
 
 ## Changelogs
 
