@@ -23,15 +23,15 @@ const loadRoute = async (
   try {
     if (ext === ".js" || ext === ".ts") {
       const router = require(filePath);
-      plugins?.middleware.forEach(({ subscriber }) => {
-        subscriber(app, filePath, newRoutePath, router);
+      plugins?.middleware.forEach(async ({ subscriber }) => {
+        await subscriber(app, filePath, newRoutePath, router);
       });
       app.use(newRoutePath, router);
     } else if (ext === ".mjs") {
       const routeUrl = pathToFileURL(filePath).href;
       const { default: router } = await import(routeUrl);
-      plugins?.middleware.forEach(({ subscriber }) => {
-        subscriber(app, filePath, newRoutePath, router);
+      plugins?.middleware.forEach(async ({ subscriber }) => {
+        await subscriber(app, filePath, newRoutePath, router);
       });
       app.use(newRoutePath, router);
     }
